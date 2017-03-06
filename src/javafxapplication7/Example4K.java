@@ -91,7 +91,7 @@ public class Example4K extends Application {
         foodList.add(food3);
         foodList.add(food4);
         foodList.add(food5);
-        for (int i = 0; i < foodList.size(); i ++) {
+        for (int i = 0; i < foodList.size(); i++) {
             randomize(i);
         }
 
@@ -123,12 +123,38 @@ public class Example4K extends Application {
 
                 for (int i = 0; i < foodList.size(); i++) {
 
+                    int move = rand.nextInt(4);
+                    int speed = rand.nextInt(20);
+                    
+                    if (foodList.get(i).getX() > 0) {
+                        if (move == 1) {
+                            foodList.get(i).setX((int) (foodList.get(i).getX() - rand.nextInt(speed)));
+                        }
+
+                    }
+
+                    if (foodList.get(i).getX() + foodList.get(i).getRadius() < 1180) {
+                        if (move == 2) {
+                            foodList.get(i).setX((int) (foodList.get(i).getX() + rand.nextInt(speed)));
+                        }
+                    }
+                    if (foodList.get(i).getY() > 20) {
+                        if (move == 3) {
+                            foodList.get(i).setY((int) (foodList.get(i).getY() - rand.nextInt(speed)));
+                        }
+                    }
+                    if (foodList.get(i).getY() + player.getRadius() < 790) {
+                        if (move == 4) {
+                            foodList.get(i).setY((int) (foodList.get(i).getY() + rand.nextInt(speed)));
+                        }
+                    }
+
                     if (player.hitBox().getBoundsInParent().intersects(foodList.get(i).hitBox().getBoundsInParent()) && foodList.get(i).alive) {
                         score++;
                         foodList.get(i).alive = false;
-                        player.setRadius((int) (player.getRadius() + 1));
+                        player.setRadius( (player.getRadius() + foodList.get(i).getRadius()/12));
                         randomize(i);
-                        
+
                     }
                 }
             }
@@ -153,6 +179,18 @@ public class Example4K extends Application {
         String pointsText = "Food: " + (100 * score);
         gc.fillText(pointsText, 580, 36);
         gc.strokeText(pointsText, 580, 36);
+        if(player.getX() > 1200 || player.getY() > 800|| player.getX() < 0|| player.getY() < 0 || score == 4){
+        player.y = 400 - player.getRadius();
+        player.x = 600 - player.getRadius();
+        for(int i =0; i < foodList.size(); i ++){
+            foodList.get(i).alive = false;
+            foodList.remove(i);
+        }
+        String winText = "YOU'VE WON!!!!!";
+        gc.fillText(winText, 580, 600);
+        gc.strokeText(winText, 580, 600);
+        player.setRadius(player.getRadius() + .3);
+    }
         player.drawplayer(gc);
         for (int i = 0; i < foodList.size(); i++) {
             if (foodList.get(i).alive) {

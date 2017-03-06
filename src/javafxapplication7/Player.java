@@ -32,7 +32,7 @@ public class Player {
         center = new Point2D(x, y);
     }
 
-    public void setRadius(int r) {
+    public void setRadius(double r) {
         radius = r;
     }
 
