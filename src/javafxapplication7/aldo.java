@@ -26,7 +26,7 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class Example4K extends Application {
+public class aldo extends Application {
 
     public static void main(String[] args) {
         launch(args);
