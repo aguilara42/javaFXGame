@@ -179,7 +179,7 @@ public class aldo extends Application {
         String pointsText = "Food: " + (100 * score);
         gc.fillText(pointsText, 580, 36);
         gc.strokeText(pointsText, 580, 36);
-        if(player.getX() > 1200 || player.getY() > 800|| player.getX() < 0|| player.getY() < 0 || score == 4){
+        if(player.getX() > 1200 || player.getY() > 800|| player.getX() < 0|| player.getY() < 0 || score == 32){
         player.y = 400 - player.getRadius();
         player.x = 600 - player.getRadius();
         for(int i =0; i < foodList.size(); i ++){
