@@ -49,7 +49,7 @@ public class aldo extends Application {
 
     @Override
     public void start(Stage mainStage) {
-        mainStage.setTitle("Aldo Aguilar");
+        mainStage.setTitle("aguilar.io");
 
         Group root = new Group();
         mainScene = new Scene(root);
@@ -122,32 +122,46 @@ public class aldo extends Application {
                 }
 
                 for (int i = 0; i < foodList.size(); i++) {
-
-                    int move = rand.nextInt(4);
-                    int speed = rand.nextInt(20);
+                    double lastmove = 1;
+                    double dy = 1;
+                    double move = rand.nextInt();
+                    double speed = rand.nextInt(20);
                     
-                    if (foodList.get(i).getX() > 0) {
-                        if (move == 1) {
-                            foodList.get(i).setX((int) (foodList.get(i).getX() - rand.nextInt(speed)));
-                        }
-
+                    if(dy < 0 && lastmove == 1 && move > .05){
+                        
                     }
-
-                    if (foodList.get(i).getX() + foodList.get(i).getRadius() < 1180) {
-                        if (move == 2) {
-                            foodList.get(i).setX((int) (foodList.get(i).getX() + rand.nextInt(speed)));
-                        }
+                    else if(dy > 0 && lastmove == -1 && move > .05){
+                        
                     }
-                    if (foodList.get(i).getY() > 20) {
-                        if (move == 3) {
-                            foodList.get(i).setY((int) (foodList.get(i).getY() - rand.nextInt(speed)));
-                        }
+                    else if (!(dy > 0 && lastmove == 1)  && !(dy < 0 && lastmove == -1))
+                    {
+                        
                     }
-                    if (foodList.get(i).getY() + player.getRadius() < 790) {
-                        if (move == 4) {
-                            foodList.get(i).setY((int) (foodList.get(i).getY() + rand.nextInt(speed)));
-                        }
-                    }
+                    
+                    
+//                    
+//                    if (foodList.get(i).getX() > 0) {
+//                        if (move == 1) {
+//                            foodList.get(i).setX((int) (foodList.get(i).getX() - rand.nextInt(speed)));
+//                        }
+//
+//                    }
+//
+//                    if (foodList.get(i).getX() + foodList.get(i).getRadius() < 1180) {
+//                        if (move == 2) {
+//                            foodList.get(i).setX((int) (foodList.get(i).getX() + rand.nextInt(speed)));
+//                        }
+//                    }
+//                    if (foodList.get(i).getY() > 20) {
+//                        if (move == 3) {
+//                            foodList.get(i).setY((int) (foodList.get(i).getY() - rand.nextInt(speed)));
+//                        }
+//                    }
+//                    if (foodList.get(i).getY() + player.getRadius() < 790) {
+//                        if (move == 4) {
+//                            foodList.get(i).setY((int) (foodList.get(i).getY() + rand.nextInt(speed)));
+//                        }
+//                    }
 
                     if (player.hitBox().getBoundsInParent().intersects(foodList.get(i).hitBox().getBoundsInParent()) && foodList.get(i).alive) {
                         score++;
@@ -169,7 +183,7 @@ public class aldo extends Application {
 
         foodList.get(a).setX(rand.nextInt(1200));
         foodList.get(a).setY(rand.nextInt(800));
-        foodList.get(a).setRadius(rand.nextInt((int) player.getRadius() + 4));
+        foodList.get(a).setRadius(rand.nextInt((int) player.getRadius() + 4) + 15);
         foodList.get(a).alive = true;
 
     }
