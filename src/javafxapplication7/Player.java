@@ -63,7 +63,7 @@ public class Player {
 
     public Circle hitBox() {
         Circle hit;
-        hit = new Circle(x, y, radius);
+        hit = new Circle(x, y, radius*.6);
         return hit;
     }
 
