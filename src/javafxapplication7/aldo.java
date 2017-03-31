@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.KeyCode;
+import javafx.scene.text.Text;
 
 public class aldo extends Application {
 
@@ -33,6 +35,7 @@ public class aldo extends Application {
     }
 
     static Scene mainScene;
+    static boolean startScreen = true;
     static GraphicsContext gc;
     static int WIDTH = 1200;
     static int HEIGHT = 800;
@@ -46,6 +49,7 @@ public class aldo extends Application {
     static Food food4 = new Food(50, 50, 50, Color.AQUA);
     static Food food5 = new Food(50, 50, 50, Color.AQUA);
     static Random rand = new Random();
+    static boolean gamePlaying;
 
     @Override
     public void start(Stage mainStage) {
@@ -96,83 +100,131 @@ public class aldo extends Application {
         }
 
         new AnimationTimer() {
+            double dx = 1;
+            double dy = 1;
+            double lastmove = 1;
+            double lastmovex = 1;
 
             public void handle(long currentNanoTime) {
+                if (startScreen) {
+                    Text startText = new Text();
+                    startText.setText("press N to start");
+                    startText.setX(300);
+                    startText.setY(250);
+                    startText.setFont(new Font(60));
+                    startText.setFill(Color.PURPLE);
+                    root.getChildren().add(startText);
+                    System.out.println("StartScreen = true");
+                    
+                    if (input.contains("LEFT")) {
+                        gamePlaying = true;
+                        startText.setFill(Color.WHITE);
+                        startScreen = false;
+                        System.out.println("n is pressed");
+                    }
+                if (gamePlaying){
+                    System.out.println("gameIsPlaying");
+                int enemy = rand.nextInt(4);
                 render();
+
                 if (player.x > 0) {
                     if (input.contains("LEFT")) {
                         player.x = player.x - 3;
+
+                        foodList.get(enemy).setX((int) (foodList.get(enemy).getX() - rand.nextInt(8)));
+                        lastmovex *= -1;
+
+                        foodList.get(enemy).setY((int) (foodList.get(enemy).getY() - rand.nextInt(8)));
+                        lastmove *= -1;
                     }
                 }
 
                 if (player.x + player.getRadius() < 1200) {
                     if (input.contains("RIGHT")) {
                         player.x = player.x + 3;
+
+                        foodList.get(enemy).setX((int) (foodList.get(enemy).getX() + rand.nextInt(8)));
+                        lastmovex *= -1;
                     }
                 }
                 if (player.y > 0) {
                     if (input.contains("UP")) {
                         player.y = player.y - 3;
+                        foodList.get(enemy).setY((int) (foodList.get(enemy).getY() - rand.nextInt(8)));
+                        lastmove *= -1;
                     }
                 }
                 if (player.y + player.getRadius() < 800) {
                     if (input.contains("DOWN")) {
                         player.y = player.y + 3;
+                        foodList.get(enemy).setY((int) (foodList.get(enemy).getY() + rand.nextInt(8)));
+                        lastmove *= -1;
                     }
                 }
+                double dx = 1;
+                double dy = 1;
+                double lastmove = 1;
+                double lastmovex = 1;
 
                 for (int i = 0; i < foodList.size(); i++) {
-                    double lastmove = 1;
-                    double dy = 1;
                     double move = rand.nextInt();
-                    double speed = rand.nextInt(20);
-                    
-                    if(dy < 0 && lastmove == 1 && move > .05){
-                        
+
+                    int speed = 2;
+
+                    if (dy < 0 && lastmove == 1 && move > 1) {
+                        dy *= -1;
+                    } else if (dy > 0 && lastmove == -1 && move > 1) {
+                        dy *= -1;
+                    } else if (!(dy > 0 && lastmove == 1) && !(dy < 0 && lastmove == -1)) {
+                        lastmove *= -1;
                     }
-                    else if(dy > 0 && lastmove == -1 && move > .05){
-                        
+
+                    if (dx < 0 && lastmovex == 1 && move > 1) {
+                        dx *= -1;
+                    } else if (dx > 0 && lastmovex == -1 && move > 1) {
+                        dx *= -1;
+                    } else if (!(dx > 0 && lastmovex == 1) && !(dx < 0 && lastmovex == -1)) {
+                        lastmovex *= -1;
                     }
-                    else if (!(dy > 0 && lastmove == 1)  && !(dy < 0 && lastmove == -1))
-                    {
-                        
+
+                    if (foodList.get(i).getX() > 0) {
+                        if (dx == -1) {
+                            foodList.get(i).setX((int) (foodList.get(i).getX() - rand.nextInt(speed)));
+                            lastmovex *= -1;
+                        }
+
                     }
-                    
-                    
-//                    
-//                    if (foodList.get(i).getX() > 0) {
-//                        if (move == 1) {
-//                            foodList.get(i).setX((int) (foodList.get(i).getX() - rand.nextInt(speed)));
-//                        }
-//
-//                    }
-//
-//                    if (foodList.get(i).getX() + foodList.get(i).getRadius() < 1180) {
-//                        if (move == 2) {
-//                            foodList.get(i).setX((int) (foodList.get(i).getX() + rand.nextInt(speed)));
-//                        }
-//                    }
-//                    if (foodList.get(i).getY() > 20) {
-//                        if (move == 3) {
-//                            foodList.get(i).setY((int) (foodList.get(i).getY() - rand.nextInt(speed)));
-//                        }
-//                    }
-//                    if (foodList.get(i).getY() + player.getRadius() < 790) {
-//                        if (move == 4) {
-//                            foodList.get(i).setY((int) (foodList.get(i).getY() + rand.nextInt(speed)));
-//                        }
-//                    }
+
+                    if (foodList.get(i).getX() + foodList.get(i).getRadius() < 1180) {
+                        if (dx == 1) {
+                            foodList.get(i).setX((int) (foodList.get(i).getX() + rand.nextInt(speed)));
+                            lastmovex *= -1;
+                        }
+                    }
+                    if (foodList.get(i).getY() > 20) {
+                        if (dy == 1) {
+                            foodList.get(i).setY((int) (foodList.get(i).getY() - rand.nextInt(speed)));
+                            lastmove *= -1;
+                        }
+                    }
+                    if (foodList.get(i).getY() + player.getRadius() < 790) {
+                        if (dy == -1) {
+                            foodList.get(i).setY((int) (foodList.get(i).getY() + rand.nextInt(speed)));
+                            lastmove *= -1;
+                        }
+                    }
 
                     if (player.hitBox().getBoundsInParent().intersects(foodList.get(i).hitBox().getBoundsInParent()) && foodList.get(i).alive) {
                         score++;
                         foodList.get(i).alive = false;
-                        player.setRadius( (player.getRadius() + foodList.get(i).getRadius()/12));
+                        player.setRadius((player.getRadius() + foodList.get(i).getRadius() / 12));
                         randomize(i);
 
                     }
                 }
             }
-
+            }
+            }
         }
                 .start();
 
@@ -183,7 +235,7 @@ public class aldo extends Application {
 
         foodList.get(a).setX(rand.nextInt(1200));
         foodList.get(a).setY(rand.nextInt(800));
-        foodList.get(a).setRadius(rand.nextInt((int) player.getRadius() + 4) + 15);
+        foodList.get(a).setRadius(rand.nextInt((int) player.getRadius() + 4) + 20);
         foodList.get(a).alive = true;
 
     }
@@ -193,18 +245,18 @@ public class aldo extends Application {
         String pointsText = "Food: " + (100 * score);
         gc.fillText(pointsText, 580, 36);
         gc.strokeText(pointsText, 580, 36);
-        if(player.getX() > 1200 || player.getY() > 800|| player.getX() < 0|| player.getY() < 0 || score == 32){
-        player.y = 400 - player.getRadius();
-        player.x = 600 - player.getRadius();
-        for(int i =0; i < foodList.size(); i ++){
-            foodList.get(i).alive = false;
-            foodList.remove(i);
+        if (player.getX() > 1200 || player.getY() > 800 || player.getX() < 0 || player.getY() < 0 || score == 32) {
+            player.y = 400 - player.getRadius();
+            player.x = 600 - player.getRadius();
+            for (int i = 0; i < foodList.size(); i++) {
+                foodList.get(i).alive = false;
+                foodList.remove(i);
+            }
+            String winText = "YOU'VE WON!!!!!";
+            gc.fillText(winText, 580, 600);
+            gc.strokeText(winText, 580, 600);
+            player.setRadius(player.getRadius() + .3);
         }
-        String winText = "YOU'VE WON!!!!!";
-        gc.fillText(winText, 580, 600);
-        gc.strokeText(winText, 580, 600);
-        player.setRadius(player.getRadius() + .3);
-    }
         player.drawplayer(gc);
         for (int i = 0; i < foodList.size(); i++) {
             if (foodList.get(i).alive) {
