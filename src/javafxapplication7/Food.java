@@ -74,7 +74,7 @@ public class Food{
 
     public Circle hitBox(){
         Circle hit;
-        hit = new Circle(x, y, radius*.6); 
+        hit = new Circle(x, y, radius); 
         return hit;
     }
 
